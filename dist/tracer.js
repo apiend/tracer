@@ -34,6 +34,8 @@
     var Config = {
         // 上报地址
         reportUrl: 'http://localhost:10000',
+        // 默认是 post 提交
+        isPost: true,
         // 提交参数
         token: '',
         // app版本
@@ -77,6 +79,7 @@
     function getConfig(e) {
         return e ? Config[e] ? Config[e] : {} : {};
     }
+    //# sourceMappingURL=index.js.map
 
     var noop = function () { };
     function randomString() {
@@ -176,6 +179,7 @@
         };
     };
     var isInIframe = self != top;
+    //# sourceMappingURL=tools.js.map
 
     // 默认参数
     var GlobalVal = {
@@ -212,6 +216,7 @@
             apifail: 0
         };
     }
+    //# sourceMappingURL=global.js.map
 
     function getCommonMsg() {
         var u = navigator.connection;
@@ -273,6 +278,7 @@
         var h = document.documentElement.clientHeight || document.body.clientHeight;
         return w + 'x' + h;
     }
+    //# sourceMappingURL=index.js.map
 
     // 上报
     function report(e) {
@@ -290,10 +296,16 @@
         var body = msg[msg.t];
         delete msg[msg.t];
         var url = Config.reportUrl + "?" + serialize(msg);
-        post(url, (_a = {},
-            _a[msg.t] = body,
-            _a));
-        // new Image().src = `${Config.reportUrl}?${serialize(msg)}`
+        // post 方法
+        if (Config.isPost) {
+            post(url, (_a = {},
+                _a[msg.t] = body,
+                _a));
+        }
+        else {
+            // images get 
+            new Image().src = Config.reportUrl + "?" + serialize(msg);
+        }
     }
     function post(url, body) {
         var XMLHttpRequest = window.__oXMLHttpRequest_ || window.XMLHttpRequest;
@@ -773,6 +785,7 @@
             window.history.forward();
         }
     }
+    //# sourceMappingURL=handlers.js.map
 
     // hack console
     // "debug", "info", "warn", "log", "error"
@@ -913,6 +926,7 @@
                 return window.__bb_onpopstate_.apply(this, a);
         };
     }
+    //# sourceMappingURL=hack.js.map
 
     var Tracer = /** @class */ (function () {
         function Tracer(options, fn) {
@@ -1031,6 +1045,7 @@
         };
         return Tracer;
     }());
+    //# sourceMappingURL=index.js.map
 
     return Tracer;
 

@@ -4,12 +4,12 @@ import { queryString, serialize, warn } from './utils/tools'
 
 // 上报
 export function report(e: ReportData) {
-    "res" === e.t ? 
-    send(e) 
-      : "error" === e.t ? send(e) 
-      : "behavior" === e.t ? send(e) 
-      : "health" === e.t && window && window.navigator && "function" == typeof window.navigator.sendBeacon ? sendBeacon(e) 
-      : send(e);
+  "res" === e.t ?
+    send(e)
+    : "error" === e.t ? send(e)
+      : "behavior" === e.t ? send(e)
+        : "health" === e.t && window && window.navigator && "function" == typeof window.navigator.sendBeacon ? sendBeacon(e)
+          : send(e);
   return this
 }
 
@@ -18,10 +18,17 @@ export function send(msg: ReportData) {
   var body = msg[msg.t]
   delete msg[msg.t]
   var url = `${Config.reportUrl}?${serialize(msg)}`
-  post(url, {
-    [msg.t]: body
-  })
-  // new Image().src = `${Config.reportUrl}?${serialize(msg)}`
+  // post 方法
+  if (Config.isPost) {
+    post(url, {
+      [msg.t]: body
+    })
+  } else {
+    // images get 
+    new Image().src = `${Config.reportUrl}?${serialize(msg)}`
+  }
+
+
 }
 
 export function post(url, body) {
@@ -41,10 +48,10 @@ export function post(url, body) {
 }
 
 // 健康检查上报
-export function sendBeacon(e:any) {
+export function sendBeacon(e: any) {
   "object" == typeof e && (e = serialize(e));
   e = `${Config.reportUrl}?${e}`
-  window && window.navigator && "function" == typeof window.navigator.sendBeacon 
-    ? window.navigator.sendBeacon(e) 
+  window && window.navigator && "function" == typeof window.navigator.sendBeacon
+    ? window.navigator.sendBeacon(e)
     : warn("[arms] navigator.sendBeacon not surported")
 }

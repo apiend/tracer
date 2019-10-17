@@ -2,6 +2,8 @@
 export let Config = {
   // 上报地址
   reportUrl: 'http://localhost:10000',
+  // 默认是 post 提交
+  isPost: true,
   // 提交参数
   token: '',
   // app版本
