@@ -1,5 +1,5 @@
 import { Config, getConfig, } from './config'
-import { queryString, serialize, each, parseHash, warn, splitGroup,on,off, isInIframe, } from './utils/tools'
+import { queryString, serialize, each, parseHash, warn, splitGroup,on,off, isInIframe, findIndex, } from './utils/tools'
 import { getCommonMsg } from './utils/index'
 import { report } from './reporter'
 import { setGlobalPage, setGlobalSid, setGlobalHealth, GlobalVal, resetGlobalHealth,} from './config/global'
@@ -28,9 +28,12 @@ export function handlePv(): void {
 const normalTarget = function (e) {
   var t, n, r, a, i, o = [];
   if (!e || !e.tagName) return "";
-  if (o.push(e.tagName.toLowerCase()), e.id && o.push("#".concat(e.id)), (t = e.className) &&
-      "[object String]" === Object.prototype.toString.call(t))
-      for (n = t.split(/\s+/), i = 0; i < n.length; i++) o.push(".".concat(n[i]));
+  if (o.push(e.tagName.toLowerCase()), e.id && o.push("#".concat(e.id)), (t = e.className) && "[object String]" === Object.prototype.toString.call(t)) {
+    for (n = t.split(/\s+/), i = 0; i < n.length; i++) {
+      // className包含active的不加入路径
+      if (n[i].indexOf('active') < 0) o.push(".".concat(n[i]));
+    }
+  }
   var s = ["type", "name", "title", "alt"];
   for (i = 0; i < s.length; i++) r = s[i], (a = e.getAttribute(r)) && o.push("[".concat(
       r, '="').concat(a, '"]'));
@@ -43,6 +46,7 @@ const getElmPath = function (e) {
   var ret = [],
       deepLength = 0, // 层数，最多5层
       elm = '' // 元素
+  ret.push(`(${e.innerText.substr(0, 50)})`)
   for (var t = e || null; t && deepLength++ < 5 &&!("html" === (elm = normalTarget(t)));) {
     ret.push(elm), t = t.parentNode;
   }
@@ -152,7 +156,20 @@ export function handlePerf(): void {
   const performance = window.performance
   if (!performance || 'object' !== typeof performance) return
 
-  let data: any = {},
+  let data: any = {
+    dns: 0, // DNS查询 domainLookupEnd - domainLookupStart
+    tcp: 0, // TCP链接
+    ssl: 0, // SSL建连
+    ttfb: 0, // 请求响应
+    trans: 0,
+    dom: 0,
+    res: 0,
+    firstbyte: 0,
+    fpt: 0,
+    tti: 0,
+    ready: 0,
+    load: 0 // domready时间 
+  },
     timing = performance.timing || {},
     now = Date.now(),
     type = 1;
@@ -180,7 +197,7 @@ export function handlePerf(): void {
   }, function (e, t) {
       var r = timing[TIMING_KEYS[e[1]]],
           o = timing[TIMING_KEYS[e[0]]];
-      if (2 === type || r > 0 && o > 0) {
+      if (2 === type || r !== undefined && o !== undefined) {
           var c = Math.round(o - r);
           c >= 0 && c < 36e5 && (data[t] = c)
       }
@@ -247,7 +264,8 @@ export function setPage(page, isFirst?: boolean) {
     if (isInIframe) {
       window.parent.postMessage({
         t: 'setPage',
-        page: location.href,
+        href: location.href,
+        page,
       }, '*')
     }
     setGlobalPage(page)
@@ -388,14 +406,14 @@ export function handleResource() {
   }, function (e, t) {
       var r = i[TIMING_KEYS[e[1]]],
           o = i[TIMING_KEYS[e[0]]];
-      if (r > 0 && o > 0) {
+      if (r !== undefined && o !== undefined) {
           var s = Math.round(o - r);
           s >= 0 && s < 36e5 && (msg[t] = s)
       }
   })
   // 过滤忽略的url
   o = o.filter(item => {
-    var include = getConfig('ignore').ignoreApis.findIndex(ignoreApi => item.name.indexOf(ignoreApi) > -1)
+    var include = findIndex(getConfig('ignore').ignoreApis, ignoreApi => item.name.indexOf(ignoreApi) > -1)
     return include > -1 ? false : true
   })
   msg.res = o
@@ -424,7 +442,7 @@ export function handleApi(url, success, time, code, msg, beigin) {
     }
   }
   // 过滤忽略的url
-  var include = getConfig('ignore').ignoreApis.findIndex(ignoreApi => url.indexOf(ignoreApi) > -1)
+  var include = findIndex(getConfig('ignore').ignoreApis, ignoreApi => url.indexOf(ignoreApi) > -1)
   if (include > -1) return
   report(apiMsg)
 }
@@ -543,7 +561,7 @@ function handleMessage(event) {
   // 防止其他message的干扰
   if (!event.data || !event.data.t) return
   if (event.data.t === 'setCircle') {
-    if (Boolean(event.data)) {
+    if (Boolean(event.data.v)) {
       listenCircleListener()
     } else {
       removeCircleListener()
