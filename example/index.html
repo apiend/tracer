@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src='../dist/tracer.umd.js'></script>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<body>
+  <img class='imga' id='iii' width='200' height='120' src='./dog.jpeg'/>
+  index
+  <script>
+    new Tracer({
+      enableSPA: true,
+      isPost:false,
+      token: '4hjrKWK1569405386362',
+      reportUrlMultiple: 'http://127.0.0.1:7002/api/v1/report/web'
+    })
+  </script>
+  <script src='./a.js'></script>
+  <!-- <script src='./b.js'></script> -->
+  <script>
+    // console.log(b)
+    function A () {
+      B()
+    }
+
+    function B() {
+      C()
+    }
+
+    function C() {
+      console.log(c)
+    }
+
+    // A()
+
+    // setTimeout(()=> {
+    //   console.log(a)
+    // },1000)
+//     function foo()
+// {
+// return Promise.reject('Hello!');
+// }
+ 
+    
+//     var r = foo();
+ 
+//     setTimeout(() =>
+//     {
+//     r.catch(e =>{});
+//     }, 1000);
+  </script>
+  <!-- <a href='#a'>a</a> -->
+  <button id="#btn" onclick="C()">aaa</button>
+  <input class='name'/>
+  <textarea class='ta'></textarea>
+  
+  <script>
+      // fetch('http://localhost:5000/example/zan1')
+
+    function C() {
+      location.href='#a'
+      // let stateObj = {
+      //   foo: "bar",
+      //   };
+
+      //   history.pushState(stateObj, "page 2", "bar.html");
+      // console.log('a', 'b')
+      // $.ajax({
+      //   url: 'http://localhost:5000/example/zan'
+      // });
+      $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: 'http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',
+        data: JSON.stringify({"lang":"ZH","timestamp":1569225444068}),
+        dataType: 'json'
+      });
+      // $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
+      __bb.msg('A::a');
+      // __bb.sum('A::b');
+      // __bb.sum('A::c');
+      // __bb.sum('B::a');
+      // __bb.sum('B::b');
+      // __bb.sum('B::c');
+    }
+  </script>
+ 
+</body>
+</html>
