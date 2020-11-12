@@ -29,14 +29,23 @@ export function send(msg: ReportData | ReportDataList) {
       behaviorList: msg,
     });
   } else {
+
+    
     var body = msg[msg.t];
     delete msg[msg.t];
     var url = `${Config.reportUrl}?${serialize(msg)}`;
-    post(url, {
-      [msg.t]: body,
-    });
+
+    if(Config.isPost){
+      post(url, {
+        [msg.t]: body,
+      });
+    }else{
+        // 会丢弃 res | behavior ,类型的部分参数
+        new Image().src = `${Config.reportUrl}?${serialize(msg)}`
+    }
+    
   }
-  // new Image().src = `${Config.reportUrl}?${serialize(msg)}`
+
 }
 
 export function post(url, body) {

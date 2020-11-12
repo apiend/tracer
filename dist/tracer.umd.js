@@ -48,6 +48,8 @@
         reportUrlMultiple: '',
         // 最长缓存长度
         maxCacheLength: 20,
+        // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点
+        isPost: true,
         // 提交参数
         token: '',
         // app版本
@@ -68,11 +70,11 @@
         isResource: true,
         // 是否上报错误信息
         isError: true,
-        // 是否录屏
+        // NOTE: 是否录屏 功能暂未开发后续 可通过插件的形式 实现
         isRecord: true,
         // 是否记录停留时长
         isCountStayTime: true,
-        // 是否上报行为
+        // 是否上报行为 如果是行为上报则需要通过 post 的方式 上报
         isBehavior: true,
         ignore: {
             ignoreErrors: [],
@@ -380,11 +382,16 @@
             var body = msg[msg.t];
             delete msg[msg.t];
             var url = Config.reportUrl + "?" + serialize(msg);
-            post(url, (_a = {},
-                _a[msg.t] = body,
-                _a));
+            if (Config.isPost) {
+                post(url, (_a = {},
+                    _a[msg.t] = body,
+                    _a));
+            }
+            else {
+                // 会丢弃 res | behavior ,类型的部分参数
+                new Image().src = Config.reportUrl + "?" + serialize(msg);
+            }
         }
-        // new Image().src = `${Config.reportUrl}?${serialize(msg)}`
     }
     function post(url, body) {
         var XMLHttpRequest = window.__oXMLHttpRequest_ || window.XMLHttpRequest;
