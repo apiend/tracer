@@ -1,4 +1,4 @@
-import { parseUrl, fnToString, warn, dispatchCustomEvent, on, parseHash } from './utils/tools';
+import { parseUrl, fnToString, warn, dispatchCustomEvent, on, parseHash,replacerFunc} from './utils/tools';
 import { handleBehavior, handleApi, setPage } from './handlers';
 import { Config } from './config';
 
@@ -17,7 +17,7 @@ export function hackConsole() {
             type: 'console',
             data: {
               level: r,
-              message: JSON.stringify(i),
+              message: JSON.stringify(i, replacerFunc()),
             },
           };
           handleBehavior(s);

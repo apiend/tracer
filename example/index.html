@@ -13,16 +13,17 @@
   index
   <script>
     new Tracer({
-      enableSPA: true,
-      isPost:false,
-      token: '4hjrKWK1569405386362',
-      reportUrl:"http://127.0.0.1:7002/api/v1/report/web" 
+    
+      isResource:false,
+      isBehavior:false,
+      token: 'WclPpQfiBkdcqzOe',
+      reportUrl:"http://127.0.0.1:9003/api/v1/report"
     })
   </script>
   <script src='./a.js'></script>
   <!-- <script src='./b.js'></script> -->
   <script>
-    // console.log(b)
+    console.log("222")
     function A () {
       B()
     }
@@ -79,9 +80,9 @@
       //   data: JSON.stringify({"lang":"ZH","timestamp":1569225444068}),
       //   dataType: 'json'
       // });
-      // $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
-      __bb.msg('A::a');
-      __bb.sum('A::b');
+      $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
+      // __bb.msg('A::a');
+      // __bb.sum('A::b');
       // __bb.sum('A::c');
       // __bb.sum('B::a');
       // __bb.sum('B::b');

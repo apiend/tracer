@@ -22,6 +22,7 @@ export function report(e: ReportData | ReportDataList) {
   return this;
 }
 
+
 // post上报
 export function send(msg: ReportData | ReportDataList) {
   if (Array.isArray(msg)) {
@@ -57,10 +58,10 @@ export function post(url, body) {
       xhr.setRequestHeader('Content-Type', 'text/plain');
       xhr.send(JSON.stringify(body));
     } catch (e) {
-      warn('[bombayjs] Failed to log, POST请求失败');
+      warn('[tracer.js] Failed to log, POST请求失败');
     }
   } else {
-    warn('[bombayjs] Failed to log, 浏览器不支持XMLHttpRequest');
+    warn('[tracer.js] Failed to log, 浏览器不支持XMLHttpRequest');
   }
 }
 

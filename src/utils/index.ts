@@ -61,10 +61,10 @@ function getPage(): string {
 
 // 获取uid
 function getUid(): string {
-  let uid = localStorage.getItem('bombay_uid') || '';
+  let uid = localStorage.getItem('tracer_uid') || '';
   if (!uid) {
     uid = randomString();
-    localStorage.setItem('bombay_uid', uid);
+    localStorage.setItem('tracer_uid', uid);
   }
   return uid;
 }

@@ -49,7 +49,7 @@
         // 最长缓存长度
         maxCacheLength: 20,
         // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点
-        isPost: true,
+        isPost: false,
         // 提交参数
         token: '',
         // app版本
@@ -71,7 +71,7 @@
         // 是否上报错误信息
         isError: true,
         // NOTE: 是否录屏 功能暂未开发后续 可通过插件的形式 实现
-        isRecord: true,
+        isRecord: false,
         // 是否记录停留时长
         isCountStayTime: true,
         // 是否上报行为 如果是行为上报则需要通过 post 的方式 上报
@@ -85,7 +85,7 @@
             ignoreBehaviorEles: [],
         },
         behavior: {
-            console: ['log', 'error'],
+            console: ['debug', 'error'],
             click: true,
         },
         // 最长上报数据长度
@@ -222,6 +222,22 @@
         return isEdge;
     };
     var isInIframe = self != top;
+    /**
+     * fix: TypeError: Converting circular structure to JSON
+     * 修复一些循环依赖的问题.
+     */
+    var replacerFunc = function () {
+        var visited = new WeakSet();
+        return function (key, value) {
+            if (typeof value === "object" && value !== null) {
+                if (visited.has(value)) {
+                    return;
+                }
+                visited.add(value);
+            }
+            return value;
+        };
+    };
 
     var cache = localStorage.getItem('bombay-cache')
         ? JSON.parse(localStorage.getItem('bombay-cache'))
@@ -264,7 +280,7 @@
         };
     }
 
-    var version = "2.0.1";
+    var version = "2.0.3";
 
     // 获取公共的上传参数
     function getCommonMsg() {
@@ -318,10 +334,10 @@
     }
     // 获取uid
     function getUid() {
-        var uid = localStorage.getItem('bombay_uid') || '';
+        var uid = localStorage.getItem('tracer_uid') || '';
         if (!uid) {
             uid = randomString();
-            localStorage.setItem('bombay_uid', uid);
+            localStorage.setItem('tracer_uid', uid);
         }
         return uid;
     }
@@ -403,11 +419,11 @@
                 xhr.send(JSON.stringify(body));
             }
             catch (e) {
-                warn('[bombayjs] Failed to log, POST请求失败');
+                warn('[tracer.js] Failed to log, POST请求失败');
             }
         }
         else {
-            warn('[bombayjs] Failed to log, 浏览器不支持XMLHttpRequest');
+            warn('[tracer.js] Failed to log, 浏览器不支持XMLHttpRequest');
         }
     }
     // 健康检查上报
@@ -689,28 +705,14 @@
         var page = Config.enableSPA ? parseHash(e.detail.toLowerCase()) : e.detail.toLowerCase();
         page && setPage(page, false);
     }
-    // 处理pv
-    function handleNavigation(page) {
-        var commonMsg = getCommonMsg();
-        var msg = __assign(__assign({}, commonMsg), {
-            t: 'behavior',
-            behavior: {
-                type: 'navigation',
-                data: {
-                    from: commonMsg.page,
-                    to: page,
-                },
-            },
-        });
-        report(msg);
-    }
     // 设置页面，是否是第一次
     function setPage(page, isFirst) {
         if (!isFirst && GlobalVal.page === page && GlobalVal.sBegin > Date.now() - 100) {
             return;
         }
         !isFirst && handleHealth();
-        handleNavigation(page);
+        // FIXME: 这不需要 Navigation 
+        // handleNavigation(page);
         if (isInIframe) {
             window.parent.postMessage({
                 t: 'setPage',
@@ -743,8 +745,8 @@
             msg: error,
             file: '',
             stack: 'Vue',
-            vm: JSON.stringify(vm),
-            info: JSON.stringify(info),
+            vm: JSON.stringify(vm, replacerFunc()),
+            info: JSON.stringify(info, replacerFunc()),
         });
         report(msg);
     }
@@ -1040,7 +1042,7 @@
                             type: 'console',
                             data: {
                                 level: r,
-                                message: JSON.stringify(i),
+                                message: JSON.stringify(i, replacerFunc()),
                             },
                         };
                         handleBehavior(s);

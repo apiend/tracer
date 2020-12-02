@@ -9,6 +9,7 @@ import {
   isInIframe,
   findIndex,
   checkEdge,
+  replacerFunc
 } from './utils/tools';
 import { getCommonMsg } from './utils/index';
 import { report } from './reporter';
@@ -44,7 +45,7 @@ export function handlePv(): void {
 }
 
 // 处理html node
-const normalTarget = function(e) {
+const normalTarget = function (e) {
   var t,
     n,
     r,
@@ -54,8 +55,8 @@ const normalTarget = function(e) {
   if (!e || !e.tagName) return '';
   if (
     (o.push(e.tagName.toLowerCase()),
-    e.id && o.push('#'.concat(e.id)),
-    (t = e.className) && '[object String]' === Object.prototype.toString.call(t))
+      e.id && o.push('#'.concat(e.id)),
+      (t = e.className) && '[object String]' === Object.prototype.toString.call(t))
   ) {
     for (n = t.split(/\s+/), i = 0; i < n.length; i++) {
       // className包含active的不加入路径
@@ -69,7 +70,7 @@ const normalTarget = function(e) {
 };
 
 // 获取元素路径，最多保留5层
-const getElmPath = function(e) {
+const getElmPath = function (e) {
   if (!e || 1 !== e.nodeType) return '';
   var ret = [],
     deepLength = 0, // 层数，最多5层
@@ -77,7 +78,7 @@ const getElmPath = function(e) {
   if (e.innerText) {
     ret.push(`(${e.innerText.substr(0, 50)})`);
   }
-  for (var t = e || null; t && deepLength++ < 5 && !('html' === (elm = normalTarget(t))); ) {
+  for (var t = e || null; t && deepLength++ < 5 && !('html' === (elm = normalTarget(t)));) {
     ret.push(elm), (t = t.parentNode);
   }
   return ret.reverse().join(' > ');
@@ -229,19 +230,19 @@ export function handlePerf(): void {
   const performance = window.performance;
   if (!performance || 'object' !== typeof performance) return;
   let data: any = {
-      dns: 0, // DNS查询 domainLookupEnd - domainLookupStart
-      tcp: 0, // TCP链接
-      ssl: 0, // SSL建连
-      ttfb: 0, // 请求响应
-      trans: 0,
-      dom: 0,
-      res: 0,
-      firstbyte: 0,
-      fpt: 0,
-      tti: 0,
-      ready: 0,
-      load: 0, // domready时间
-    },
+    dns: 0, // DNS查询 domainLookupEnd - domainLookupStart
+    tcp: 0, // TCP链接
+    ssl: 0, // SSL建连
+    ttfb: 0, // 请求响应
+    trans: 0,
+    dom: 0,
+    res: 0,
+    firstbyte: 0,
+    fpt: 0,
+    tti: 0,
+    ready: 0,
+    load: 0, // domready时间
+  },
     timing = performance.timing || {},
     now = Date.now(),
     type = 1;
@@ -273,7 +274,7 @@ export function handlePerf(): void {
           ready: [12, 1],
           load: [14, 1],
         },
-        function(e, t) {
+        function (e, t) {
           var r = timing[TIMING_KEYS[e[1]]],
             o = timing[TIMING_KEYS[e[0]]];
           var c = Math.round(o - r);
@@ -287,16 +288,16 @@ export function handlePerf(): void {
       );
 
       var u =
-          window.navigator.connection ||
-          (window.navigator as any).mozConnection ||
-          (window.navigator as any).webkitConnection,
+        window.navigator.connection ||
+        (window.navigator as any).mozConnection ||
+        (window.navigator as any).webkitConnection,
         f = performance.navigation || { type: undefined };
       data.ct = u ? u.effectiveType || u.type : '';
       var l = u ? u.downlink || u.downlinkMax || u.bandwidth || null : null;
       if (
         ((l = l > 999 ? 999 : l) && (data.bandwidth = l),
-        (data.navtype = 1 === f.type ? 'Reload' : 'Other'),
-        1 === type && timing[TIMING_KEYS[16]] > 0 && timing[TIMING_KEYS[1]] > 0)
+          (data.navtype = 1 === f.type ? 'Reload' : 'Other'),
+          1 === type && timing[TIMING_KEYS[16]] > 0 && timing[TIMING_KEYS[1]] > 0)
       ) {
         var h = timing[TIMING_KEYS[16]] - timing[TIMING_KEYS[1]];
         h >= 0 && h < 36e5 && (data.fpt = h);
@@ -304,8 +305,8 @@ export function handlePerf(): void {
       1 === type && timing[TIMING_KEYS[1]] > 0
         ? (data.begin = timing[TIMING_KEYS[1]])
         : 2 === type && data.load > 0
-        ? (data.begin = now - data.load)
-        : (data.begin = now);
+          ? (data.begin = now - data.load)
+          : (data.begin = now);
       let commonMsg = getCommonMsg();
       let msg: perfMsg = {
         ...commonMsg,
@@ -358,7 +359,9 @@ export function setPage(page, isFirst?: boolean) {
     return;
   }
   !isFirst && handleHealth();
-  handleNavigation(page);
+  // FIXME: 这不需要 Navigation 
+  // handleNavigation(page);
+
   if (isInIframe) {
     window.parent.postMessage(
       {
@@ -402,8 +405,8 @@ export function handleVueErr(error, vm, info): void {
       msg: error,
       file: '',
       stack: 'Vue',
-      vm: JSON.stringify(vm),
-      info: JSON.stringify(info),
+      vm: JSON.stringify(vm, replacerFunc()),
+      info: JSON.stringify(info, replacerFunc()),
     },
   };
   report(msg);
@@ -513,7 +516,7 @@ export function handleResource() {
       dom: [10, 8],
       load: [14, 1],
     },
-    function(e, t) {
+    function (e, t) {
       var r = i[TIMING_KEYS[e[1]]],
         o = i[TIMING_KEYS[e[0]]];
       if (r !== undefined && o !== undefined) {
@@ -534,7 +537,7 @@ export function handleResource() {
   // 兼容Edge浏览器无法直接使用PerformanceResourceTiming对象类型的数据进行上报，处理方式是定义变量重新赋值
   if (checkEdge()) {
     var edgeResources = [];
-    each(o, function(oItem) {
+    each(o, function (oItem) {
       edgeResources.push({
         connectEnd: oItem.connectEnd,
         connectStart: oItem.connectStart,

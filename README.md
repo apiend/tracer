@@ -2,6 +2,7 @@
 
 JavaScript APM Tracer , 前端监控SDK , 主要用于捕捉前端出现的异常情况
 
+
 ## Github 
 
   https://github.com/apiend/tracer
@@ -57,7 +58,7 @@ npm i @diogoxiang/tracer -S
 ```
 
 ```js
-import Tracer from 'Tracer'
+import Tracer from '@diogoxiang/tracer'
 或 var Tracer = require('Tracer')
 
 new Tracer({
@@ -177,3 +178,15 @@ new Bombay({
 ![avatar](/example/fix.png)
 
 图片加载失败之后循环调用的问题是因为vconsole的原因造成的
+
+
+
+## Changelog
+
+### 2020-11-23 11:26:45
+
+- 删除一些默认配置,只默认只开启 error, pv, ajax性能数据
+
+
+### 修复BUG
+- TypeError: Converting circular structure to JSON

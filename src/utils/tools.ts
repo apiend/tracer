@@ -136,3 +136,22 @@ export const checkEdge = function() {
 }
 
 export const isInIframe = self != top
+
+
+ 
+/**
+ * fix: TypeError: Converting circular structure to JSON
+ * 修复一些循环依赖的问题.
+ */
+export const replacerFunc = () => {
+  const visited = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (visited.has(value)) {
+        return;
+      }
+      visited.add(value);
+    }
+    return value;
+  };
+};

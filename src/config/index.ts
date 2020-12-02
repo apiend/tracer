@@ -7,7 +7,7 @@ export let Config = {
   // 最长缓存长度
   maxCacheLength: 20,
   // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点
-  isPost:true,
+  isPost:false,
   // 提交参数
   token: '',
   // app版本
@@ -29,12 +29,11 @@ export let Config = {
   // 是否上报错误信息
   isError: true,
   // NOTE: 是否录屏 功能暂未开发后续 可通过插件的形式 实现
-  isRecord: true,
+  isRecord: false,
   // 是否记录停留时长
   isCountStayTime: true,
   // 是否上报行为 如果是行为上报则需要通过 post 的方式 上报
   isBehavior: true,
-  
   ignore: {
     ignoreErrors: [],
     ignoreUrls: [],
@@ -44,7 +43,7 @@ export let Config = {
     ignoreBehaviorEles: [],
   },
   behavior: {
-    console: ['log', 'error'], // 取值可以是"debug", "info", "warn", "log", "error"
+    console: ['debug', 'error'], // 取值可以是"debug", "info", "warn", "log", "error"
     click: true,
   },
   // 最长上报数据长度
