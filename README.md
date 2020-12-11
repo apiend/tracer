@@ -79,7 +79,7 @@ new Tracer({
   // 提交参数
   token: '',
   // app版本
-  appVersion: '1.0.0',
+  // appVersion: '1.0.0', 无用
   // Vue的类
   Vue: '',
   // 环境

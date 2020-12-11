@@ -276,7 +276,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.0.3";
+var version = "2.0.4";
 
 // 获取公共的上传参数
 function getCommonMsg() {
@@ -288,7 +288,8 @@ function getCommonMsg() {
         page: getPage(),
         hash: getHash(),
         times: 1,
-        v: Config.appVersion,
+        // v: Config.appVersion,
+        v: "" + version,
         token: Config.token,
         e: Config.environment,
         begin: new Date().getTime(),
@@ -299,7 +300,7 @@ function getCommonMsg() {
         ct: u ? u.effectiveType : '',
         device: device,
         ul: getLang(),
-        _v: "" + version,
+        // _v: `${version}`,
         o: location.href,
         // deviceBrowser: JSON.stringify(deviceInfo.browser || {}),
         // deviceModel: JSON.stringify(deviceInfo.device || {}),
