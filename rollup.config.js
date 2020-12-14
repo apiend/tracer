@@ -13,6 +13,16 @@ const useTypescript = true; // 是否使用typescript 默认为false
 
 // 打包的各个不同环境配置
 const builds = {
+  'iife-dev': {
+    outFile: 'tracer.th.js',
+    format: 'iife',
+    mode: 'development',
+  },
+  'iife-prod': {
+    outFile: 'tracer.th.min.js',
+    format: 'iife',
+    mode: 'production',
+  },
   'cjs-dev': {
     outFile: 'tracer.js',
     format: 'cjs',
@@ -102,4 +112,3 @@ if (process.env.TARGET) {
 }
 
 export default buildConfig;
-
