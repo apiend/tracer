@@ -6,9 +6,14 @@ import UA from 'ua-device';
 
 // 获取公共的上传参数
 export function getCommonMsg() {
-  const device = getDeviceString();
 
+  // const device = getDeviceString();
   // const deviceInfo = getDeviceInfo();
+
+  // 2020-12-21 17:33:32
+  const tempinfo = getDeviceInfo2()
+  const device = tempinfo.deviceModel + "|" + tempinfo.deviceOs + "|" + tempinfo.wechat;
+
   let u = (navigator as any).connection;
   let data: CommonMsg = {
     t: '',
@@ -48,6 +53,7 @@ function getDeviceString(): string {
   return navigator.userAgent;
 }
 
+// 使用库 太大了
 // function getDeviceInfo(): any {
 //   return new UA(window.navigator.userAgent) || {};
 // }
@@ -94,4 +100,56 @@ function getScreen() {
   let w = document.documentElement.clientWidth || document.body.clientWidth;
   let h = document.documentElement.clientHeight || document.body.clientHeight;
   return w + 'x' + h;
+}
+
+
+/**
+ *  add:  通过 navigator.userAgent 
+ *  - 优先获取手机信息
+ */
+function getDeviceInfo2(): deviceMsg {
+
+  let userAgent = navigator.userAgent
+
+  let weblog: deviceMsg = {}
+
+  let m1 = userAgent.match(/MicroMessenger.*?(?= )/)
+  if (m1 && m1.length > 0) {
+    weblog.wechat = m1[0]
+  }
+
+  // 苹果手机
+  if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+    // 获取设备名
+    if (userAgent.includes('iPad')) {
+      weblog.deviceModel = 'iPad'
+    } else {
+      weblog.deviceModel = 'iPhone'
+    }
+    // 获取操作系统版本
+    m1 = userAgent.match(/iPhone OS .*?(?= )/)
+    if (m1 && m1.length > 0) {
+      weblog.deviceOs = m1[0]
+    }
+  }
+
+  // 安卓手机
+  if (userAgent.includes('Android')) {
+    // 获取设备名
+    m1 = userAgent.match(/Android.*; ?(.*(?= Build))/)
+    if (m1 && m1.length > 1) {
+      weblog.deviceModel = m1[1]
+    }
+    // 获取操作系统版本
+    m1 = userAgent.match(/Android.*?(?=;)/)
+    if (m1 && m1.length > 0) {
+      weblog.deviceOs = m1[0]
+    }
+  }
+
+  // PC端
+  
+
+
+  return weblog
 }

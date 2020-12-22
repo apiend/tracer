@@ -281,8 +281,11 @@
 
     // 获取公共的上传参数
     function getCommonMsg() {
-        var device = getDeviceString();
+        // const device = getDeviceString();
         // const deviceInfo = getDeviceInfo();
+        // 2020-12-21 17:33:32
+        var tempinfo = getDeviceInfo2();
+        var device = tempinfo.deviceModel + "|" + tempinfo.deviceOs + "|" + tempinfo.wechat;
         var u = navigator.connection;
         var data = {
             t: '',
@@ -315,10 +318,7 @@
     function getHash() {
         return location.hash;
     }
-    // 获取当前设备相关信息
-    function getDeviceString() {
-        return navigator.userAgent;
-    }
+    // 使用库 太大了
     // function getDeviceInfo(): any {
     //   return new UA(window.navigator.userAgent) || {};
     // }
@@ -361,6 +361,48 @@
         var w = document.documentElement.clientWidth || document.body.clientWidth;
         var h = document.documentElement.clientHeight || document.body.clientHeight;
         return w + 'x' + h;
+    }
+    /**
+     *  add:  通过 navigator.userAgent
+     *  - 优先获取手机信息
+     */
+    function getDeviceInfo2() {
+        var userAgent = navigator.userAgent;
+        var weblog = {};
+        var m1 = userAgent.match(/MicroMessenger.*?(?= )/);
+        if (m1 && m1.length > 0) {
+            weblog.wechat = m1[0];
+        }
+        // 苹果手机
+        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+            // 获取设备名
+            if (userAgent.includes('iPad')) {
+                weblog.deviceModel = 'iPad';
+            }
+            else {
+                weblog.deviceModel = 'iPhone';
+            }
+            // 获取操作系统版本
+            m1 = userAgent.match(/iPhone OS .*?(?= )/);
+            if (m1 && m1.length > 0) {
+                weblog.deviceOs = m1[0];
+            }
+        }
+        // 安卓手机
+        if (userAgent.includes('Android')) {
+            // 获取设备名
+            m1 = userAgent.match(/Android.*; ?(.*(?= Build))/);
+            if (m1 && m1.length > 1) {
+                weblog.deviceModel = m1[1];
+            }
+            // 获取操作系统版本
+            m1 = userAgent.match(/Android.*?(?=;)/);
+            if (m1 && m1.length > 0) {
+                weblog.deviceOs = m1[0];
+            }
+        }
+        // PC端
+        return weblog;
     }
 
     // 上报
