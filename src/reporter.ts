@@ -30,13 +30,11 @@ export function send(msg: ReportData | ReportDataList) {
       behaviorList: msg,
     });
   } else {
-
     
-    var body = msg[msg.t];
-    delete msg[msg.t];
-    var url = `${Config.reportUrl}?${serialize(msg)}`;
-
     if(Config.isPost){
+      var body = msg[msg.t];
+      delete msg[msg.t];
+      var url = `${Config.reportUrl}?${serialize(msg)}`;
       post(url, {
         [msg.t]: body,
       });

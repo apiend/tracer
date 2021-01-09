@@ -48,7 +48,7 @@
         reportUrlMultiple: '',
         // 最长缓存长度
         maxCacheLength: 20,
-        // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点
+        // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点,但会丢失用户行为数据
         isPost: false,
         // 提交参数
         token: '',
@@ -88,8 +88,8 @@
             console: ['debug', 'error'],
             click: true,
         },
-        // 最长上报数据长度
-        maxLength: 1000,
+        // 最长上报数据长度 ( ajax 返回值的时候用使用)
+        maxLength: 100,
         // 是否有Vue传入
         Vue: '',
         // 用户信息
@@ -280,7 +280,7 @@
         };
     }
 
-    var version = "2.0.4";
+    var version = "2.0.7";
 
     // 获取公共的上传参数
     function getCommonMsg() {
@@ -438,10 +438,10 @@
             });
         }
         else {
-            var body = msg[msg.t];
-            delete msg[msg.t];
-            var url = Config.reportUrl + "?" + serialize(msg);
             if (Config.isPost) {
+                var body = msg[msg.t];
+                delete msg[msg.t];
+                var url = Config.reportUrl + "?" + serialize(msg);
                 post(url, (_a = {},
                     _a[msg.t] = body,
                     _a));
@@ -1128,7 +1128,7 @@
         hackFetch();
         hackAjax();
     }
-    // 劫持fetch网络请求
+    // 劫持fetch网络请求 会被截断，最长1000个字符
     function hackFetch() {
         if ('function' == typeof window.fetch) {
             var __oFetch_ = window.fetch;
@@ -1148,10 +1148,10 @@
                     var time = Date.now() - begin;
                     response.text().then(function (res) {
                         if (response.ok) {
-                            handleApi(page, !0, time, status, res.substr(0, 1000) || '', begin);
+                            handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '', begin);
                         }
                         else {
-                            handleApi(page, !1, time, status, res.substr(0, 1000) || '', begin);
+                            handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '', begin);
                         }
                     });
                     return e;

@@ -9,12 +9,14 @@ import replace from 'rollup-plugin-replace'; // 编译时替换对应的字段
 import json from '@rollup/plugin-json'; // 读取json信息的
 import commonjs from 'rollup-plugin-commonjs';
 
+import config from "./package.json";
+
 const useTypescript = true; // 是否使用typescript 默认为false
 
 // 打包的各个不同环境配置
 const builds = {
   'iife-dev': {
-    outFile: 'tracer.th.js',
+    outFile: 'tracer.iife.js', //
     format: 'iife',
     mode: 'development',
   },
@@ -42,6 +44,11 @@ const builds = {
     outFile: 'tracer.umd.min.js',
     format: 'umd',
     mode: 'production',
+  },
+  'umd-th':{
+    outFile: `tracer.umd.min.${config.version}.js`,
+      format: 'umd',
+      mode: 'production',
   },
   'es-dev': {
     outFile: 'tracer.module.js',

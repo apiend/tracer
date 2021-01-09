@@ -67,7 +67,7 @@ export function hackhook() {
   hackAjax();
 }
 
-// 劫持fetch网络请求
+// 劫持fetch网络请求 会被截断，最长1000个字符
 function hackFetch() {
   if ('function' == typeof window.fetch) {
     var __oFetch_ = window.fetch;
@@ -88,9 +88,9 @@ function hackFetch() {
         var time = Date.now() - begin;
         response.text().then(function(res) {
           if (response.ok) {
-            handleApi(page, !0, time, status, res.substr(0, 1000) || '', begin);
+            handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '', begin);
           } else {
-            handleApi(page, !1, time, status, res.substr(0, 1000) || '', begin);
+            handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '', begin);
           }
         });
         return e;

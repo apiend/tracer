@@ -6,7 +6,7 @@ export let Config = {
   reportUrlMultiple: '',
   // 最长缓存长度
   maxCacheLength: 20,
-  // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点
+  // 是否为 post 的方式进行上报 默认是 true  当是 false 的时候通过 new Image() 方法上报,兼容好点,但会丢失用户行为数据
   isPost:false,
   // 提交参数
   token: '',
@@ -46,8 +46,8 @@ export let Config = {
     console: ['debug', 'error'], // 取值可以是"debug", "info", "warn", "log", "error"
     click: true,
   },
-  // 最长上报数据长度
-  maxLength: 1000,
+  // 最长上报数据长度 ( ajax 返回值的时候用使用)
+  maxLength: 100,
   // 是否有Vue传入
   Vue: '',
   // 用户信息
