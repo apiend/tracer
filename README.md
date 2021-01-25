@@ -183,6 +183,11 @@ new Bombay({
 
 ## Changelog
 
+### v2.0.8 2021-1-25 11:28:17
+- 修改 isResource(页面资源数据), isBehavior(上报行为), isAjax(ajax 监听) 默认为 false  如有需求.可初始化开启
+- 删除配置参数 needPushtoKafaka 
+
+
 ### 2021-1-8 11:23:18
 - Config.maxLength 限制改为100 方便监听 ajax 的数据,及上报的数据
 

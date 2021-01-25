@@ -12,20 +12,20 @@ export let Config = {
   token: '',
   // app版本
   appVersion: '1.0.0',
-  // 环境
-  environment: 'production',
+  // 环境 dev or prod
+  environment: 'prod',
   // 脚本延迟上报时间
   outtime: 300,
   // 开启单页面？
   enableSPA: true,
   // 是否自动上报pv
   autoSendPv: true,
-  // 是否上报页面性能数据
-  isPage: true,
-  // 是否上报ajax性能数据
-  isAjax: true,
+  // 是否上报页面性能数据 perf
+  isPage: true, 
+  // 是否上报ajax性能数据 及监听
+  isAjax: false,
   // 是否上报页面资源数据
-  isResource: true,
+  isResource: false,
   // 是否上报错误信息
   isError: true,
   // NOTE: 是否录屏 功能暂未开发后续 可通过插件的形式 实现
@@ -33,7 +33,7 @@ export let Config = {
   // 是否记录停留时长
   isCountStayTime: true,
   // 是否上报行为 如果是行为上报则需要通过 post 的方式 上报
-  isBehavior: true,
+  isBehavior: false,
   ignore: {
     ignoreErrors: [],
     ignoreUrls: [],
@@ -57,7 +57,7 @@ export let Config = {
   // 多少时间上传一次用户停留
   sendMill: 30 * 1000,
   // 是否需要推送相关信息到java后台的kafaka
-  needPushtoKafaka: false,
+  // needPushtoKafaka: false,
 };
 
 // 设置参数

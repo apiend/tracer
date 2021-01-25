@@ -39,7 +39,7 @@ export function getCommonMsg() {
     // deviceEngine: JSON.stringify(deviceInfo.deviceEngine || {}),
     // deviceOs: JSON.stringify(deviceInfo.os || {}),
     user: JSON.stringify(Config.user),
-    needPushtoKafaka: Config.needPushtoKafaka,
+    // needPushtoKafaka: Config.needPushtoKafaka,
   };
   return data;
 }

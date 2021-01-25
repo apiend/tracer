@@ -11,12 +11,11 @@
 <body>
   <img class='imga' id='iii' width='200' height='120' src='./dog.jpeg'/>
   index
+  <img class='imga' id='iii' width='200' height='120' src='./dogs.jpeg' />
   <script>
     new Tracer({
-      isResource:false,
-      isBehavior:false,
-      token: 'WclPpQfiBkdcqzOe',
-      reportUrl:"http://127.0.0.1:9003/api/v1/report"
+      token: 'zDYcDemZRdPcEjWa', // zDYcDemZRdPcEjWa eBOOqLoyMlhsfcQt
+      reportUrl:"http://127.0.0.1:9003/arms/v1/report"
     })
   </script>
   <script src='./a.js'></script>
@@ -72,6 +71,7 @@
       // $.ajax({
       //   url: 'http://localhost:5000/example/zan'
       // });
+      
       // $.ajax({
       //   type: 'POST',
       //   contentType: 'application/json',
@@ -79,7 +79,16 @@
       //   data: JSON.stringify({"lang":"ZH","timestamp":1569225444068}),
       //   dataType: 'json'
       // });
-      $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
+
+      $.get("http://127.0.0.1:9004/bak/u/userController/login",function(res,status,xhr){
+
+        console.log(res);
+        console.log(status);
+        console.log(xhr);
+
+      })
+
+      // $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
       // __bb.msg('A::a');
       // __bb.sum('A::b');
       // __bb.sum('A::c');
