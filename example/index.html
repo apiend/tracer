@@ -6,16 +6,27 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <script src='../dist/tracer.umd.js'></script>
-  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+  <script src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.3.min.js"></script>
 </head>
 <body>
   <img class='imga' id='iii' width='200' height='120' src='./dog.jpeg'/>
   index
   <img class='imga' id='iii' width='200' height='120' src='./dogs.jpeg' />
   <script>
+       function GetRandomNum(min,max){
+       var range = max-min; //得到随机数区间
+       var rand = Math.random(); //得到随机值
+       return (min + Math.round(rand *range)); //最小值+随机数取整
+       }
+
+    var app = ["vFRdCkilincRzXdg","zDYcDemZRdPcEjWa"]
+      
+    var i = GetRandomNum(0,1)
+
     new Tracer({
-      token: 'zDYcDemZRdPcEjWa', // zDYcDemZRdPcEjWa eBOOqLoyMlhsfcQt
-      reportUrl:"http://127.0.0.1:9003/arms/v1/report"
+      token: app[i], // zDYcDemZRdPcEjWa eBOOqLoyMlhsfcQt
+      reportUrl:"http://127.0.0.1:9003/arms/v1/report",
+      isAjax:true
     })
   </script>
   <script src='./a.js'></script>
@@ -80,11 +91,12 @@
       //   dataType: 'json'
       // });
 
-      $.get("http://127.0.0.1:9004/bak/u/userController/login",function(res,status,xhr){
+      $.get("http://localhost:9004/1bak/u/userController/login",function(res,status,xhr){
 
         console.log(res);
         console.log(status);
         console.log(xhr);
+  
 
       })
 
@@ -96,6 +108,25 @@
       // __bb.sum('B::b');
       // __bb.sum('B::c');
     }
+
+ 
+    
+    function SetTimeFun(){
+      var stime = GetRandomNum(1000,3000)
+      C()
+      setTimeout(() => {
+        
+        // 新生成用户
+        window.localStorage.clear()
+        window.sessionStorage.clear()
+
+        location.reload()
+
+      }, stime);
+    }
+
+    SetTimeFun();
+     
   </script>
  
 </body>

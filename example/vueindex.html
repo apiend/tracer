@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue home</title>
+    <script src='../dist/tracer.umd.js'></script>
+    <script src="https://unpkg.com/vue@2.6.13/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+    </div>
+
+
+    <script>
+        new Tracer({
+            token: "zDYcDemZRdPcEjWa", // zDYcDemZRdPcEjWa eBOOqLoyMlhsfcQt
+            reportUrl: "http://127.0.0.1:9003/arms/v1/report",
+            isAjax: true,
+            Vue: Vue
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!'
+            },
+            mounted() {
+                console.log(0000);
+                this.makeError()
+            },
+            methods: {
+                makeError() {
+                    let a = null;
+                    if (a.length > 1) {
+                        // ...
+                        console.log(1111);
+                    }
+                }
+            }
+        })
+
+        // console.log(app);
+    </script>
+</body>
+
+</html>

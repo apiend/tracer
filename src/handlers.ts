@@ -11,7 +11,7 @@ import {
   checkEdge,
   replacerFunc
 } from './utils/tools';
-import { getCommonMsg } from './utils/index';
+import { getCommonMsg, b64EncodeUnicode } from './utils/index';
 import { report } from './reporter';
 import {
   setGlobalPage,
@@ -35,8 +35,9 @@ export function handlePv(): void {
     ...{
       t: 'pv',
       dt: document.title,
-      dl: location.href,
-      dr: document.referrer,
+      dl: encodeURIComponent(location.href),
+      // dr: document.referrer,
+      dr: encodeURIComponent(document.referrer),
       dpr: window.devicePixelRatio,
       de: document.charset,
     },
@@ -402,11 +403,14 @@ export function handleVueErr(error, vm, info): void {
     ...{
       t: 'error',
       st: 'vue_error',
-      msg: error,
+      msg: b64EncodeUnicode(error),
       file: '',
-      stack: 'Vue',
-      vm: JSON.stringify(vm, replacerFunc()),
-      info: JSON.stringify(info, replacerFunc()),
+      // stack: 'Vue',
+      // VM 太大了
+      // vm: JSON.stringify(vm, replacerFunc()),
+      // info: JSON.stringify(info, replacerFunc()),
+      // 返回出错的 hook
+      detail:JSON.stringify(info, replacerFunc()),
     },
   };
   report(msg);
@@ -441,9 +445,12 @@ function reportCaughtError(error: any): void {
       t: 'error',
       st: 'caughterror',
       cate: n, // 类别
-      msg: a && a.substring(0, 1e3), // 信息
-      detail: i && i.substring(0, 1e3), // 错误栈
-      file: error.filename || '', // 出错文件
+      // msg: a && a.substring(0, 1e3), // 信息
+      // detail: i && i.substring(0, 1e3), // 错误栈
+      msg: b64EncodeUnicode(a),
+      detail: b64EncodeUnicode(i),
+      // file: error.filename || '', // 出错文件
+      file: b64EncodeUnicode(error.filename) || '',
       line: error.lineno || '', // 行
       col: error.colno || '', // 列
     },
@@ -463,8 +470,9 @@ function reportResourceError(error: any): void {
     ...{
       t: 'error',
       st: 'resource',
-      msg: target.outerHTML,
-      file: target.src,
+      // msg: target.outerHTML,
+      msg: encodeURIComponent(target.outerHTML),
+      file: b64EncodeUnicode(encodeURIComponent(target.src)),
       stack: target.localName.toUpperCase(),
     },
   };
@@ -479,7 +487,7 @@ function reportPromiseError(error: any): void {
     ...{
       t: 'error',
       st: 'promise',
-      msg: error.reason,
+      msg: b64EncodeUnicode(error.reason),
     },
   };
   report(msg);
@@ -563,13 +571,17 @@ export function handleResource() {
 }
 
 // 监听接口的错误
-export function handleApi(url, success, time, code, msg, beigin) {
-  if (!url) {
+export function handleApi(aurl, success, time, code, emsg, beigin) {
+  if (!aurl) {
     warn('[retcode] api is null');
     return;
   }
   // 设置健康状态
   setGlobalHealth('api', success);
+  
+  // new 
+  let msg = b64EncodeUnicode(emsg)
+  let url = encodeURIComponent(aurl)
 
   let commonMsg = getCommonMsg();
   let apiMsg: ApiMsg = {

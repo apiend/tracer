@@ -1,3 +1,4 @@
-console.log(diogoxiang)
+// console.log(diogoxiang)
+console.log(namexiang)
 
  

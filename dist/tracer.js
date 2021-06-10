@@ -274,7 +274,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.0.8";
+var version = "2.1.0";
 
 // 获取公共的上传参数
 function getCommonMsg() {
@@ -302,7 +302,8 @@ function getCommonMsg() {
         device: device,
         ul: getLang(),
         // _v: `${version}`,
-        o: location.href,
+        // o: location.href,
+        o: b64EncodeUnicode(encodeURIComponent(location.href)),
         // deviceBrowser: JSON.stringify(deviceInfo.browser || {}),
         // deviceModel: JSON.stringify(deviceInfo.device || {}),
         // deviceEngine: JSON.stringify(deviceInfo.deviceEngine || {}),
@@ -365,6 +366,8 @@ function getScreen() {
 function getDeviceInfo2() {
     var userAgent = navigator.userAgent;
     var weblog = {};
+    var isModel;
+    // 微信判断
     var m1 = userAgent.match(/MicroMessenger.*?(?= )/);
     if (m1 && m1.length > 0) {
         weblog.wechat = m1[0];
@@ -383,6 +386,7 @@ function getDeviceInfo2() {
         if (m1 && m1.length > 0) {
             weblog.deviceOs = m1[0];
         }
+        isModel = "ios";
     }
     // 安卓手机
     if (userAgent.includes('Android')) {
@@ -396,10 +400,31 @@ function getDeviceInfo2() {
         if (m1 && m1.length > 0) {
             weblog.deviceOs = m1[0];
         }
+        isModel = "Android";
     }
-    // PC端
+    // PC端 简单化处理
+    if (!isModel) {
+        weblog.deviceModel = "pc";
+        weblog.deviceOs = "pc";
+        weblog.wechat = "other";
+    }
     return weblog;
 }
+// TODO: parse mail
+// Encoding UTF8 ⇢ base64
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+        return String.fromCharCode(parseInt(p1, 16));
+    }));
+}
+// b64EncodeUnicode('✓ à la mode') // "4pyTIMOgIGxhIG1vZGU="
+// b64EncodeUnicode('\n') // "Cg=="
+// Decoding base64 ⇢ UTF8
+// function b64DecodeUnicode(str) {
+//     return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+//         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+//     }).join(''))
+// }
 
 // 上报
 function report(e) {
@@ -484,8 +509,9 @@ function handlePv() {
     var msg = __assign(__assign({}, commonMsg), {
         t: 'pv',
         dt: document.title,
-        dl: location.href,
-        dr: document.referrer,
+        dl: encodeURIComponent(location.href),
+        // dr: document.referrer,
+        dr: encodeURIComponent(document.referrer),
         dpr: window.devicePixelRatio,
         de: document.charset,
     });
@@ -778,11 +804,14 @@ function handleVueErr(error, vm, info) {
     var msg = __assign(__assign({}, commonMsg), {
         t: 'error',
         st: 'vue_error',
-        msg: error,
+        msg: b64EncodeUnicode(error),
         file: '',
-        stack: 'Vue',
-        vm: JSON.stringify(vm, replacerFunc()),
-        info: JSON.stringify(info, replacerFunc()),
+        // stack: 'Vue',
+        // VM 太大了
+        // vm: JSON.stringify(vm, replacerFunc()),
+        // info: JSON.stringify(info, replacerFunc()),
+        // 返回出错的 hook
+        detail: JSON.stringify(info, replacerFunc()),
     });
     report(msg);
 }
@@ -809,9 +838,12 @@ function reportCaughtError(error) {
         t: 'error',
         st: 'caughterror',
         cate: n,
-        msg: a && a.substring(0, 1e3),
-        detail: i && i.substring(0, 1e3),
-        file: error.filename || '',
+        // msg: a && a.substring(0, 1e3), // 信息
+        // detail: i && i.substring(0, 1e3), // 错误栈
+        msg: b64EncodeUnicode(a),
+        detail: b64EncodeUnicode(i),
+        // file: error.filename || '', // 出错文件
+        file: b64EncodeUnicode(error.filename) || '',
         line: error.lineno || '',
         col: error.colno || '',
     });
@@ -827,8 +859,9 @@ function reportResourceError(error) {
     var msg = __assign(__assign({}, commonMsg), {
         t: 'error',
         st: 'resource',
-        msg: target.outerHTML,
-        file: target.src,
+        // msg: target.outerHTML,
+        msg: encodeURIComponent(target.outerHTML),
+        file: b64EncodeUnicode(encodeURIComponent(target.src)),
         stack: target.localName.toUpperCase(),
     });
     report(msg);
@@ -839,7 +872,7 @@ function reportPromiseError(error) {
     var msg = __assign(__assign({}, commonMsg), {
         t: 'error',
         st: 'promise',
-        msg: error.reason,
+        msg: b64EncodeUnicode(error.reason),
     });
     report(msg);
 }
@@ -905,13 +938,16 @@ function handleResource() {
     report(msg);
 }
 // 监听接口的错误
-function handleApi(url, success, time, code, msg, beigin) {
-    if (!url) {
+function handleApi(aurl, success, time, code, emsg, beigin) {
+    if (!aurl) {
         warn('[retcode] api is null');
         return;
     }
     // 设置健康状态
     setGlobalHealth('api', success);
+    // new 
+    var msg = b64EncodeUnicode(emsg);
+    var url = encodeURIComponent(aurl);
     var commonMsg = getCommonMsg();
     var apiMsg = __assign(__assign({}, commonMsg), {
         t: 'api',
@@ -1289,9 +1325,21 @@ var Tracer = /** @class */ (function () {
         on('historystatechanged', handleHistorystatechange);
     };
     Tracer.prototype.addListenVueError = function (Vue) {
+        // quit if Vue isn't on the page
+        if (!Vue || !Vue.config)
+            return;
+        // 为什么这么做？
+        var _oldOnError = Vue.config.errorHandler;
         Vue.config.errorHandler = function (error, vm, info) {
             console.error(error);
+            // console.log(error);
+            // console.log(vm);
+            // console.log(info)
             handleVueErr(error, vm, info);
+            // if (typeof _oldOnError === 'function') {
+            //   // 为什么这么做？
+            //   _oldOnError.call(this, error, vm, info);
+            // }
         };
     };
     Tracer.prototype.addListenJs = function () {

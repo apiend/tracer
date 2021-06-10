@@ -33,7 +33,8 @@ export function getCommonMsg() {
     device,
     ul: getLang(),
     // _v: `${version}`,
-    o: location.href,
+    // o: location.href,
+    o: b64EncodeUnicode(encodeURIComponent(location.href)),
     // deviceBrowser: JSON.stringify(deviceInfo.browser || {}),
     // deviceModel: JSON.stringify(deviceInfo.device || {}),
     // deviceEngine: JSON.stringify(deviceInfo.deviceEngine || {}),
@@ -113,6 +114,8 @@ function getDeviceInfo2(): deviceMsg {
 
   let weblog: deviceMsg = {}
 
+  let isModel
+  // 微信判断
   let m1 = userAgent.match(/MicroMessenger.*?(?= )/)
   if (m1 && m1.length > 0) {
     weblog.wechat = m1[0]
@@ -131,6 +134,7 @@ function getDeviceInfo2(): deviceMsg {
     if (m1 && m1.length > 0) {
       weblog.deviceOs = m1[0]
     }
+    isModel = "ios"
   }
 
   // 安卓手机
@@ -145,11 +149,33 @@ function getDeviceInfo2(): deviceMsg {
     if (m1 && m1.length > 0) {
       weblog.deviceOs = m1[0]
     }
+    isModel = "Android"
+  }
+  // PC端 简单化处理
+  if (!isModel) {
+    weblog.deviceModel = "pc"
+    weblog.deviceOs = "pc"
+    weblog.wechat = "other"
   }
 
-  // PC端
-  
 
 
   return weblog
 }
+ 
+// TODO: parse mail
+// Encoding UTF8 ⇢ base64
+export function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode(parseInt(p1, 16))
+    }))
+}
+// b64EncodeUnicode('✓ à la mode') // "4pyTIMOgIGxhIG1vZGU="
+// b64EncodeUnicode('\n') // "Cg=="
+
+// Decoding base64 ⇢ UTF8
+// function b64DecodeUnicode(str) {
+//     return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+//         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+//     }).join(''))
+// }

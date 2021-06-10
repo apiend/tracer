@@ -122,10 +122,25 @@ export default class Tracer {
   }
 
   addListenVueError(Vue) {
+    // quit if Vue isn't on the page
+    if (!Vue || !Vue.config) return;
+
+    // 为什么这么做？
+    var _oldOnError = Vue.config.errorHandler;
+
     Vue.config.errorHandler = function(error, vm, info) {
       console.error(error);
+      // console.log(error);
+      // console.log(vm);
+      // console.log(info)
       handleVueErr(error, vm, info);
+      // if (typeof _oldOnError === 'function') {
+      //   // 为什么这么做？
+      //   _oldOnError.call(this, error, vm, info);
+      // }
     };
+
+    
   }
 
   addListenJs() {
