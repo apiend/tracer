@@ -641,7 +641,7 @@ export function handleMsg(key: string) {
     ...{
       t: 'msg',
       group: g.group,
-      msg: g.key.substr(0, Config.maxLength),
+      msg: b64EncodeUnicode(g.key.substr(0, Config.maxLength)),
     },
   };
   report(ret);

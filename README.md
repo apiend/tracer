@@ -1,29 +1,31 @@
-# Tracer
+## Tracer 
+
+> 最新版本 2.1.1
 
 JavaScript APM Tracer , 前端监控SDK , 主要用于捕捉前端出现的异常情况
 
 
-## Github 
+### Github 
 
   https://github.com/apiend/tracer
 
-## dev
+### dev
 
     ```
     npm run dev
     ```
 
-## build
+### build
 
     ```
     npm run build
     ```
 
-## example
+### example
 
 参考example目录
 
-## 功能
+### 功能
 
 * 上报pv uv
 * 捕获error
@@ -37,11 +39,12 @@ JavaScript APM Tracer , 前端监控SDK , 主要用于捕捉前端出现的异�
 * 暴露全局变量__bb
 * 埋点 sum avg msg
 
-## 用法
+### 用法
 
-token在bombayjs-admin后台申请
-
+token在 tracer-system 后台申请
+ 
 ### 方法一
+
 ```html
   <script src='../dist/tracer.js'></script>
   <script>
@@ -67,7 +70,8 @@ new Tracer({
 })
 ```
 
-## 配置
+### 配置
+
 ```js
 {
   // 上报地址
@@ -130,12 +134,15 @@ new Tracer({
 ```
 
 ### 设置用户信息
-通过调用Bombay实例化后的setUserInfo函数来设置用户的相关信息
+
+通过调用Tracer实例化后的setUserInfo函数来设置用户的相关信息
 
 ### 监听vue的errorHandler错误
-在实例化Bombay时传入Vue对象即可监听
+
+在实例化Tracer时传入Vue对象即可监听
+
 ```
-new Bombay({
+new Tracer({
   token: 'wnrnhkh1585620953820',
   reportUrl: 'http://127.0.0.1:7002/api/v1/report/web',
   user: {
@@ -146,23 +153,25 @@ new Bombay({
 ```
 
 ### 上传自定义行为
-通过调用实例化的Bombay的handleCustomizeReport函数即可上传，注意参数t为必传字段，表示的是类型，目前只有传t=app.click才可以透传到java后台中的kafaka
+
+通过调用实例化的Tracer的handleCustomizeReport函数即可上传，注意参数t为必传字段，表示的是类型，目前只有传t=app.click才可以透传到java后台中的kafaka
 
 目前定义的几个类型分别为
+
 ```
-  bombayInstance.handleCustomizeReport({
+  TracerInstance.handleCustomizeReport({
     t: 'app.click',
     moduleName: 'help-center',
     clickId: '77777777777'
   })
 
-  bombayInstance.handleCustomizeReport({
+  TracerInstance.handleCustomizeReport({
     t: 'searchBehaivor',
     searchValue: '哈哈哈',
     searchType: '2'
   })
 
-  bombayInstance.handleCustomizeReport({
+  TracerInstance.handleCustomizeReport({
     t: 'collectBehaivor',
     moduleName: 'help-center',
     clickId: '77777777777'
@@ -172,8 +181,10 @@ new Bombay({
 
 
 
-## notice 
+### notice 
 目前解析userAgent用的是一个老版本的库ua-device,下载下来的依赖源码又一个问题，打包的时候需要修改一下ua-device的lib文件下useragent-base.js中的detect函数第一行增加一个var match
+
+
 
 <!-- ![avatar](/example/fix.png) -->
 
@@ -181,29 +192,29 @@ new Bombay({
 
 
 
-## Changelog
+### Changelog 更新日志
 
-### v2.0.8 2021-1-25 11:28:17
+#### v2.0.8 2021-1-25 11:28:17
 - 修改 isResource(页面资源数据), isBehavior(上报行为), isAjax(ajax 监听) 默认为 false  如有需求.可初始化开启
 - 删除配置参数 needPushtoKafaka 
 
 
-### 2021-1-8 11:23:18
+#### 2021-1-8 11:23:18
 - Config.maxLength 限制改为100 方便监听 ajax 的数据,及上报的数据
 
-### 2021-1-6 17:29:58
+#### 2021-1-6 17:29:58
 - 修复 自定义上报的一些问题
 
-### 2020-12-22 10:36:12
+#### 2020-12-22 10:36:12
 - 优化 device 参数的
 
 
-### 2020-12-11 17:7:50
+#### 2020-12-11 17:7:50
 - SDK版本默认取package.json 中的配置
 
-### 2020-11-23 11:26:45
+#### 2020-11-23 11:26:45
 - 删除一些默认配置,只默认只开启 error, pv, ajax性能数据
 
 
-### 修复BUG
+#### 修复BUG
 - TypeError: Converting circular structure to JSON

@@ -278,7 +278,7 @@
         };
     }
 
-    var version = "2.1.0";
+    var version = "2.1.1";
 
     // 获取公共的上传参数
     function getCommonMsg() {
@@ -997,7 +997,7 @@
         var ret = __assign(__assign({}, commonMsg), {
             t: 'msg',
             group: g.group,
-            msg: g.key.substr(0, Config.maxLength),
+            msg: b64EncodeUnicode(g.key.substr(0, Config.maxLength)),
         });
         report(ret);
     }
