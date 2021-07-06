@@ -1,6 +1,6 @@
 {
   "name": "@diogoxiang/tracer",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "description": "JavaScript APM Tracer , 前端监控SDK",
   "main": "dist/tracer.js",
   "umd:main": "dist/tracer.umd.js",

@@ -10,17 +10,19 @@
 </head>
 <body>
   <img class='imga' id='iii' width='200' height='120' src='./dog.jpeg'/>
-  index
+   index
   <img class='imga' id='iii' width='200' height='120' src='./dogs.jpeg' />
   <script>
        function GetRandomNum(min,max){
-       var range = max-min; //得到随机数区间
-       var rand = Math.random(); //得到随机值
-       return (min + Math.round(rand *range)); //最小值+随机数取整
+        var range = max-min; //得到随机数区间
+        var rand = Math.random(); //得到随机值
+        return (min + Math.round(rand *range)); //最小值+随机数取整
        }
 
-    var app = ["vFRdCkilincRzXdg","zDYcDemZRdPcEjWa"]
-      
+    var app = ["vFRdCkilincRzXdg","zDYcDemZRdPcEjWa","XhBiZCQyDjNRvqay"]
+    
+    var demoUrl = ["/login","/user","/info",
+    "/get/name","/get/queryActvityInfo","http://127.0.0.1:9004//bak/u/userController/login"]
     var i = GetRandomNum(0,1)
 
     new Tracer({
@@ -50,18 +52,18 @@
     // setTimeout(()=> {
     //   console.log(a)
     // },1000)
-//     function foo()
-// {
-// return Promise.reject('Hello!');
-// }
+    //     function foo()
+    // {
+    // return Promise.reject('Hello!');
+    // }
  
     
-//     var r = foo();
- 
-//     setTimeout(() =>
-//     {
-//     r.catch(e =>{});
-//     }, 1000);
+    //     var r = foo();
+    
+    //     setTimeout(() =>
+    //     {
+    //     r.catch(e =>{});
+    //     }, 1000);
   </script>
   <!-- <a href='#a'>a</a> -->
   <button id="#btn" onclick="C()">aaa</button>
@@ -90,8 +92,10 @@
       //   data: JSON.stringify({"lang":"ZH","timestamp":1569225444068}),
       //   dataType: 'json'
       // });
+      var a  = GetRandomNum(0,5)
+      var purl =demoUrl[a]
 
-      $.get("http://localhost:9004/1bak/u/userController/login",function(res,status,xhr){
+      $.get(purl,function(res,status,xhr){
 
         console.log(res);
         console.log(status);
@@ -113,15 +117,16 @@
  
     
     function SetTimeFun(){
-      var stime = GetRandomNum(1000,3000)
+      var stime = GetRandomNum(1000,5000)
       C()
+      
       setTimeout(() => {
         
         // 新生成用户
-        // window.localStorage.clear()
-        // window.sessionStorage.clear()
+        window.localStorage.clear()
+        window.sessionStorage.clear()
 
-        // location.reload()
+        location.reload()
 
       }, stime);
     }

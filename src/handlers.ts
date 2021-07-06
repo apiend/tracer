@@ -588,7 +588,7 @@ export function handleApi(aurl, success, time, code, emsg, beigin) {
     ...commonMsg,
     ...{
       t: 'api',
-      beigin,
+      // beigin,
       url, // 接口
       success, // 成功？
       time, // 耗时

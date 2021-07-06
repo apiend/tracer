@@ -107,6 +107,7 @@
     function getConfig(e) {
         return e ? (Config[e] ? Config[e] : {}) : {};
     }
+    //# sourceMappingURL=index.js.map
 
     var noop = function () { };
     function randomString() {
@@ -236,6 +237,7 @@
             return value;
         };
     };
+    //# sourceMappingURL=tools.js.map
 
     var cache = localStorage.getItem('bombay-cache')
         ? JSON.parse(localStorage.getItem('bombay-cache'))
@@ -277,8 +279,9 @@
             apifail: 0,
         };
     }
+    //# sourceMappingURL=global.js.map
 
-    var version = "2.1.1";
+    var version = "2.1.2";
 
     // 获取公共的上传参数
     function getCommonMsg() {
@@ -292,7 +295,7 @@
             t: '',
             page: getPage(),
             hash: getHash(),
-            times: 1,
+            // times: 1,
             // v: Config.appVersion,
             v: "" + version,
             token: Config.token,
@@ -499,6 +502,7 @@
             ? window.navigator.sendBeacon(e)
             : warn('[arms] navigator.sendBeacon not surported');
     }
+    //# sourceMappingURL=reporter.js.map
 
     var CIRCLECLS = 'bombayjs-circle-active'; // circle class类名
     var CIRCLESTYLEID = 'bombayjs-circle-css'; // 插入的style标签id
@@ -955,7 +959,7 @@
         var commonMsg = getCommonMsg();
         var apiMsg = __assign(__assign({}, commonMsg), {
             t: 'api',
-            beigin: beigin,
+            // beigin,
             url: url,
             success: success,
             time: time,
@@ -1181,10 +1185,10 @@
                     var time = Date.now() - begin;
                     response.text().then(function (res) {
                         if (response.ok) {
-                            handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '', begin);
+                            handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '');
                         }
                         else {
-                            handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '', begin);
+                            handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '');
                         }
                     });
                     return e;
@@ -1224,10 +1228,11 @@
                                 if (r && !/(text)|(json)/.test(r))
                                     return;
                             }
-                            handleApi(page, !0, time, status, xhr.responseText.substr(0, Config.maxLength) || '', begin);
+                            handleApi(page, !0, time, status, xhr.responseText.substr(0, Config.maxLength) || '');
                         }
                         else {
-                            handleApi(page, !1, time, status || 'FAILED', xhr.responseText.substr(0, Config.maxLength) || '', begin);
+                            var status = xhr.status || 'FAILED';
+                            handleApi(page, !1, time, status, xhr.responseText.substr(0, Config.maxLength) || '');
                         }
                     }
                 };
@@ -1247,6 +1252,7 @@
             // if (window.__bb_onpopstate_) return window.__bb_onpopstate_.apply(this, a)
         });
     }
+    //# sourceMappingURL=hack.js.map
 
     var Tracer = /** @class */ (function () {
         function Tracer(options, fn) {
@@ -1390,7 +1396,7 @@
             handleMsg(key);
         };
         Tracer.prototype.api = function (api, success, time, code, msg) {
-            handleApi(api, success, time, code, msg, Date.now());
+            handleApi(api, success, time, code, msg);
         };
         Tracer.prototype.destroy = function () {
             Config.enableSPA && this.removeListenRouterChange();
@@ -1402,6 +1408,7 @@
         };
         return Tracer;
     }());
+    //# sourceMappingURL=index.js.map
 
     return Tracer;
 

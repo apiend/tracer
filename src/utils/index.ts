@@ -19,7 +19,7 @@ export function getCommonMsg() {
     t: '',
     page: getPage(),
     hash: getHash(),
-    times: 1,
+    // times: 1,
     // v: Config.appVersion,
     v: `${version}`,
     token: Config.token,

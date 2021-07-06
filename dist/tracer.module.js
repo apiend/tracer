@@ -272,7 +272,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.1.0";
+var version = "2.1.2";
 
 // 获取公共的上传参数
 function getCommonMsg() {
@@ -991,7 +991,7 @@ function handleMsg(key) {
     var ret = __assign(__assign({}, commonMsg), {
         t: 'msg',
         group: g.group,
-        msg: g.key.substr(0, Config.maxLength),
+        msg: b64EncodeUnicode(g.key.substr(0, Config.maxLength)),
     });
     report(ret);
 }
@@ -1221,7 +1221,8 @@ function hackAjax() {
                         handleApi(page, !0, time, status, xhr.responseText.substr(0, Config.maxLength) || '', begin);
                     }
                     else {
-                        handleApi(page, !1, time, status || 'FAILED', xhr.responseText.substr(0, Config.maxLength) || '', begin);
+                        var status = xhr.status || 'FAILED';
+                        handleApi(page, !1, time, status, xhr.responseText.substr(0, Config.maxLength) || '', begin);
                     }
                 }
             };

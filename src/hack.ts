@@ -142,11 +142,13 @@ function hackAjax() {
               begin
             );
           } else {
+            var status = xhr.status || 'FAILED';
+            
             handleApi(
               page,
               !1,
               time,
-              status || 'FAILED',
+              status,
               xhr.responseText.substr(0, Config.maxLength) || '',
               begin
             );
