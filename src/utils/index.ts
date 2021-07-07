@@ -1,3 +1,5 @@
+/// <reference path='../typings/index.d.ts' />
+
 import { Config } from '../config';
 import { randomString, parseHash } from './tools';
 import { GlobalVal } from '../config/global';

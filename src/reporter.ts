@@ -1,3 +1,5 @@
+/// <reference path='typings/index.d.ts' />
+
 import { Config } from './config';
 import { queryString, serialize, warn } from './utils/tools';
 

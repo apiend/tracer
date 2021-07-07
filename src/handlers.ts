@@ -1,3 +1,5 @@
+/// <reference path='typings/index.d.ts' />
+
 import { Config, getConfig } from './config';
 import {
   each,

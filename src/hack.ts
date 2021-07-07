@@ -1,3 +1,5 @@
+/// <reference path='typings/index.d.ts' />
+
 import { parseUrl, fnToString, warn, dispatchCustomEvent, on, parseHash,replacerFunc} from './utils/tools';
 import { handleBehavior, handleApi, setPage } from './handlers';
 import { Config } from './config';
