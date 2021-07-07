@@ -30,7 +30,7 @@
     "indentSize": 2,
     "tabSize": 2
   },
-  "include": ["src/**/*", "index.d.ts", "config/webpack.dev.js"],
+  "include": ["src/**/*", "src/typings/index.d.ts", "config/webpack.dev.js"],
   "bazelOptions": {
     "suppressTsconfigOverrideWarnings": true
   }

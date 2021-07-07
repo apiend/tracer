@@ -107,7 +107,6 @@
     function getConfig(e) {
         return e ? (Config[e] ? Config[e] : {}) : {};
     }
-    //# sourceMappingURL=index.js.map
 
     var noop = function () { };
     function randomString() {
@@ -237,7 +236,6 @@
             return value;
         };
     };
-    //# sourceMappingURL=tools.js.map
 
     var cache = localStorage.getItem('bombay-cache')
         ? JSON.parse(localStorage.getItem('bombay-cache'))
@@ -279,9 +277,8 @@
             apifail: 0,
         };
     }
-    //# sourceMappingURL=global.js.map
 
-    var version = "2.1.2";
+    var version = "2.1.3";
 
     // 获取公共的上传参数
     function getCommonMsg() {
@@ -502,7 +499,6 @@
             ? window.navigator.sendBeacon(e)
             : warn('[arms] navigator.sendBeacon not surported');
     }
-    //# sourceMappingURL=reporter.js.map
 
     var CIRCLECLS = 'bombayjs-circle-active'; // circle class类名
     var CIRCLESTYLEID = 'bombayjs-circle-css'; // 插入的style标签id
@@ -1252,7 +1248,6 @@
             // if (window.__bb_onpopstate_) return window.__bb_onpopstate_.apply(this, a)
         });
     }
-    //# sourceMappingURL=hack.js.map
 
     var Tracer = /** @class */ (function () {
         function Tracer(options, fn) {
@@ -1408,7 +1403,6 @@
         };
         return Tracer;
     }());
-    //# sourceMappingURL=index.js.map
 
     return Tracer;
 

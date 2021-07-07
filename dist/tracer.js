@@ -274,7 +274,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.1.2";
+var version = "2.1.3";
 
 // 获取公共的上传参数
 function getCommonMsg() {
@@ -288,7 +288,7 @@ function getCommonMsg() {
         t: '',
         page: getPage(),
         hash: getHash(),
-        times: 1,
+        // times: 1,
         // v: Config.appVersion,
         v: "" + version,
         token: Config.token,
@@ -951,7 +951,7 @@ function handleApi(aurl, success, time, code, emsg, beigin) {
     var commonMsg = getCommonMsg();
     var apiMsg = __assign(__assign({}, commonMsg), {
         t: 'api',
-        beigin: beigin,
+        // beigin,
         url: url,
         success: success,
         time: time,
@@ -1177,10 +1177,10 @@ function hackFetch() {
                 var time = Date.now() - begin;
                 response.text().then(function (res) {
                     if (response.ok) {
-                        handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '', begin);
+                        handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '');
                     }
                     else {
-                        handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '', begin);
+                        handleApi(page, !1, time, status, res.substr(0, Config.maxLength) || '');
                     }
                 });
                 return e;
@@ -1220,11 +1220,11 @@ function hackAjax() {
                             if (r && !/(text)|(json)/.test(r))
                                 return;
                         }
-                        handleApi(page, !0, time, status, xhr.responseText.substr(0, Config.maxLength) || '', begin);
+                        handleApi(page, !0, time, status, xhr.responseText.substr(0, Config.maxLength) || '');
                     }
                     else {
                         var status = xhr.status || 'FAILED';
-                        handleApi(page, !1, time, status, xhr.responseText.substr(0, Config.maxLength) || '', begin);
+                        handleApi(page, !1, time, status, xhr.responseText.substr(0, Config.maxLength) || '');
                     }
                 }
             };
@@ -1387,7 +1387,7 @@ var Tracer = /** @class */ (function () {
         handleMsg(key);
     };
     Tracer.prototype.api = function (api, success, time, code, msg) {
-        handleApi(api, success, time, code, msg, Date.now());
+        handleApi(api, success, time, code, msg);
     };
     Tracer.prototype.destroy = function () {
         Config.enableSPA && this.removeListenRouterChange();
