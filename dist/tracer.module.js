@@ -261,7 +261,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.1.4";
+var version = "2.1.5";
 
 /// <reference path='../typings/index.d.ts' />
 // 获取公共的上传参数
@@ -658,7 +658,7 @@ const TIMING_KEYS = [
     'domInteractive',
     '',
     'domContentLoadedEventEnd',
-    '',
+    'domComplete',
     'loadEventStart',
     '',
     'msFirstPaint',
@@ -700,8 +700,8 @@ function handlePerf() {
                 ssl: [5, 17],
                 ttfb: [7, 6],
                 trans: [8, 7],
-                dom: [10, 8],
-                res: [14, 12],
+                dom: [13, 10],
+                res: [8, 6],
                 firstbyte: [7, 2],
                 fpt: [8, 1],
                 tti: [10, 1],

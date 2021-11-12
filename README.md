@@ -1,6 +1,6 @@
 ## Tracer 
 
-> 最新版本 2.1.1
+> 最新版本 2.1.4
 
 JavaScript APM Tracer , 前端监控SDK , 主要用于捕捉前端出现的异常情况
 
