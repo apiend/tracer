@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src='../dist/tracer.umd.js'></script>
+  <script src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.3.min.js"></script>
+</head>
+
+<body>
+  <img class='imga' id='iii' width='200' height='120' src='./dog.jpeg' />
+  index
+  <img class='imga' id='iii' width='200' height='120' src='./dogs.jpeg' />
+  <img class='imga' src='./cat.jpeg' />
+  <!-- <img class='imga' src='./cat.jpeg' /> -->
+  <script>
+    function GetRandomNum(min, max) {
+      var range = max - min; //得到随机数区间
+      var rand = Math.random(); //得到随机值
+      return (min + Math.round(rand * range)); //最小值+随机数取整
+    }
+
+    var app = ["vFRdCkilincRzXdg", "zDYcDemZRdPcEjWa", "XhBiZCQyDjNRvqay","ncwLZONoKCxcacHz"]
+
+    var demoUrl = [
+      "/login", 
+      "/user", 
+      "/info",
+      "/get/name", 
+      "/get/queryActvityInfo", 
+      "http://127.0.0.1:9005/bak/u/userController/login",
+      "http://127.0.0.1:9005/bak/u/userController/logout"
+    ]
+    var i = GetRandomNum(0, 3)
+
+    new Tracer({
+      token: app[i], // zDYcDemZRdPcEjWa eBOOqLoyMlhsfcQt
+      reportUrl: "http://127.0.0.1:9003/arms/v2/report",
+      isAjax: true
+    })
+  </script>
+  <script src='./a.js'></script>
+  <!-- <script src='./b.js'></script> -->
+  <script>
+    console.log("222")
+
+    function A() {
+      B()
+    }
+
+    function B() {
+      C()
+    }
+
+    function C() {
+      console.log(c)
+    }
+
+    // A()
+
+    // setTimeout(()=> {
+    //   console.log(a)
+    // },1000)
+    //     function foo()
+    // {
+    // return Promise.reject('Hello!');
+    // }
+
+
+    //     var r = foo();
+
+    //     setTimeout(() =>
+    //     {
+    //     r.catch(e =>{});
+    //     }, 1000);
+  </script>
+  <!-- <a href='#a'>a</a> -->
+  <button id="#btn" onclick="C()">aaa</button>
+  <input class='name' />
+  <textarea class='ta'></textarea>
+
+  <script>
+    // fetch('http://localhost:5000/example/zan1')
+
+    function C() {
+      // location.href='#a'
+      // let stateObj = {
+      //   foo: "bar",
+      //   };
+
+      //   history.pushState(stateObj, "page 2", "bar.html");
+      // console.log('a', 'b')
+      // $.ajax({
+      //   url: 'http://localhost:5000/example/zan'
+      // });
+
+      // $.ajax({
+      //   type: 'POST',
+      //   contentType: 'application/json',
+      //   url: 'http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',
+      //   data: JSON.stringify({"lang":"ZH","timestamp":1569225444068}),
+      //   dataType: 'json'
+      // });
+      var a = GetRandomNum(0, 5)
+      var purl = demoUrl[a]
+
+      $.get(purl, function (res, status, xhr) {
+
+        console.log(res);
+        console.log(status);
+        console.log(xhr);
+
+
+      })
+
+      // $.post('http://sitm.igola.com/web-gateway/api-data-service/data/find-hot',{"lang":"ZH","timestamp":1569225444068});
+      __bb.msg('A:: index1 html ins.ken ,end');
+      __bb.msg('B::bbbb diogoxiang');
+      // __bb.sum('A::b');
+      // __bb.sum('A::c');
+      // __bb.sum('B::a');
+      // __bb.sum('B::b');
+      // __bb.sum('B::c');
+    }
+
+
+
+    function SetTimeFun() {
+      var stime = GetRandomNum(1000, 10000)
+      C()
+
+      setTimeout(() => {
+
+        // 新生成用户
+        window.localStorage.clear()
+        window.sessionStorage.clear()
+
+        location.reload()
+
+      }, stime);
+    }
+
+    SetTimeFun();
+  </script>
+
+</body>
+
+</html>
