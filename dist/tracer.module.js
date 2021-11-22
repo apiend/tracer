@@ -142,6 +142,14 @@ const off = function (event, fn) {
     return fn ? (window.removeEventListener ? window.removeEventListener(event, fn) : window.detachEvent &&
         window.detachEvent(event, fn), this) : this;
 };
+// HACK: 多用途 on 监听
+const onFun = function (t, e, n, r) {
+    return t.addEventListener ? t.addEventListener(e, function o(i) {
+        r && t.removeEventListener(e, o, !1), n.call(this, i);
+    }, !1) : t.attachEvent && t.attachEvent("on" + e, function i(o) {
+        r && t.detachEvent("on" + e, i), n.call(this, o);
+    }), this;
+};
 const parseHash = function (e) {
     return (e ? parseUrl(e.replace(/^#\/?/, "")) : "") || "[index]";
 };
@@ -261,7 +269,7 @@ function resetGlobalHealth() {
     };
 }
 
-var version = "2.1.5";
+var version = "2.1.6";
 
 /// <reference path='../typings/index.d.ts' />
 // 获取公共的上传参数
@@ -1194,7 +1202,37 @@ function hackAjax() {
                 var a = 1 === arguments.length ? [arguments[0]] : Array.apply(null, arguments);
                 send.apply(xhr, a);
             };
-            xhr.onreadystatechange = function () {
+            // xhr.onreadystatechange = function() {
+            //   if (page && 4 === xhr.readyState) {
+            //     var time = Date.now() - begin;
+            //     if (xhr.status >= 200 && xhr.status <= 299) {
+            //       var status = xhr.status || 200;
+            //       if ('function' == typeof xhr.getResponseHeader) {
+            //         var r = xhr.getResponseHeader('Content-Type');
+            //         if (r && !/(text)|(json)/.test(r)) return;
+            //       }
+            //       handleApi(
+            //         page,
+            //         !0,
+            //         time,
+            //         status,
+            //         xhr.responseText.substr(0, Config.maxLength) || '',
+            //         begin
+            //       );
+            //     } else {
+            //       var status = xhr.status || 'FAILED';
+            //       handleApi(
+            //         page,
+            //         !1,
+            //         time,
+            //         status,
+            //         xhr.responseText.substr(0, Config.maxLength) || '',
+            //         begin
+            //       );
+            //     }
+            //   }
+            // };
+            onFun(xhr, "readystatechange", function () {
                 if (page && 4 === xhr.readyState) {
                     var time = Date.now() - begin;
                     if (xhr.status >= 200 && xhr.status <= 299) {
@@ -1211,7 +1249,7 @@ function hackAjax() {
                         handleApi(page, !1, time, status, xhr.responseText.substr(0, Config.maxLength) || '');
                     }
                 }
-            };
+            }, false);
             return xhr;
         };
     }

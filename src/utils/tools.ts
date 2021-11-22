@@ -62,9 +62,25 @@ export const on = function (event, fn, remove?) {
   })
 }
 
+ 
 export const off = function (event, fn) {
   return fn ? (window.removeEventListener ? window.removeEventListener(event, fn) : window.detachEvent &&
   window.detachEvent(event, fn), this) : this
+}
+
+// HACK: 多用途 on 监听
+export const onFun =function(t,e,n,r){
+  return t.addEventListener ? t.addEventListener(e, function o(i) {
+    r && t.removeEventListener(e, o, !1), n.call(this, i);
+  }, !1) : t.attachEvent && t.attachEvent("on" + e, function i(o) {
+    r && t.detachEvent("on" + e, i), n.call(this, o);
+  }), this;
+
+}
+// HACK: off 移除
+export const offFun = function (t, e, n){
+  return n ? (t.removeEventListener ? t.removeEventListener(e, n) : t.detachEvent && t.detachEvent(e, n),
+    this) : this;
 }
 
 export const parseHash = function (e:string) {

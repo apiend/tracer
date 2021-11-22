@@ -1,6 +1,6 @@
 /// <reference path='typings/index.d.ts' />
 
-import { parseUrl, fnToString, warn, dispatchCustomEvent, on, parseHash,replacerFunc} from './utils/tools';
+import { parseUrl, fnToString, warn, dispatchCustomEvent, onFun, parseHash, replacerFunc } from './utils/tools';
 import { handleBehavior, handleApi, setPage } from './handlers';
 import { Config } from './config';
 
@@ -10,10 +10,10 @@ export function hackConsole() {
   if (window && window.console) {
     for (var e = Config.behavior.console, n = 0; e.length; n++) {
       var r = e[n];
-      var action = window.console[r]; 
+      var action = window.console[r];
       if (!window.console[r]) return;
-      (function(r, action) {
-        window.console[r] = function() {
+      (function (r, action) {
+        window.console[r] = function () {
           var i = Array.prototype.slice.apply(arguments);
           var s: consoleBehavior = {
             type: 'console',
@@ -39,7 +39,7 @@ export function hackConsole() {
 export function hackState(e: 'pushState' | 'replaceState') {
   var t = history[e];
   'function' == typeof t &&
-    ((history[e] = function(n, i, s) {
+    ((history[e] = function (n, i, s) {
       !window['__bb_onpopstate_'] && hackOnpopstate(); // 调用pushState或replaceState时hack Onpopstate
       var c = 1 === arguments.length ? [arguments[0]] : Array.apply(null, arguments),
         u = location.href,
@@ -61,7 +61,7 @@ export function hackState(e: 'pushState' | 'replaceState') {
       }
       return f;
     }),
-    (history[e].toString = fnToString(e)));
+      (history[e].toString = fnToString(e)));
 }
 
 export function hackhook() {
@@ -74,13 +74,13 @@ function hackFetch() {
   if ('function' == typeof window.fetch) {
     var __oFetch_ = window.fetch;
     window['__oFetch_'] = __oFetch_;
-    window.fetch = function(t, o) {
+    window.fetch = function (t, o) {
       var a = 1 === arguments.length ? [arguments[0]] : Array.apply(null, arguments);
       var begin = Date.now(),
         url = (t && 'string' != typeof t ? t.url : t) || '',
         page = parseUrl(url as string);
       if (!page) return __oFetch_.apply(window, a);
-      return __oFetch_.apply(window, a).then(function(e) {
+      return __oFetch_.apply(window, a).then(function (e) {
         var response = e.clone(),
           headers = response.headers;
         if (headers && 'function' === typeof headers.get) {
@@ -88,7 +88,7 @@ function hackFetch() {
           if (ct && !/(text)|(json)/.test(ct)) return e;
         }
         var time = Date.now() - begin;
-        response.text().then(function(res) {
+        response.text().then(function (res) {
           if (response.ok) {
             handleApi(page, !0, time, status, res.substr(0, Config.maxLength) || '', begin);
           } else {
@@ -109,24 +109,55 @@ function hackAjax() {
       page = '';
     var __oXMLHttpRequest_ = window.XMLHttpRequest;
     window['__oXMLHttpRequest_'] = __oXMLHttpRequest_;
-    window.XMLHttpRequest = function(t) {
+    window.XMLHttpRequest = function (t) {
       var xhr = new __oXMLHttpRequest_(t);
       if (!xhr.addEventListener) return xhr;
       var open = xhr.open,
         send = xhr.send;
-      xhr.open = function(method: string, url?: string) {
+      xhr.open = function (method: string, url?: string) {
         var a = 1 === arguments.length ? [arguments[0]] : Array.apply(null, arguments);
         url = url;
         page = parseUrl(url);
 
         open.apply(xhr, a);
       };
-      xhr.send = function() {
+      xhr.send = function () {
         begin = Date.now();
         var a = 1 === arguments.length ? [arguments[0]] : Array.apply(null, arguments);
         send.apply(xhr, a);
       };
-      xhr.onreadystatechange = function() {
+      // xhr.onreadystatechange = function() {
+      //   if (page && 4 === xhr.readyState) {
+      //     var time = Date.now() - begin;
+      //     if (xhr.status >= 200 && xhr.status <= 299) {
+      //       var status = xhr.status || 200;
+      //       if ('function' == typeof xhr.getResponseHeader) {
+      //         var r = xhr.getResponseHeader('Content-Type');
+      //         if (r && !/(text)|(json)/.test(r)) return;
+      //       }
+      //       handleApi(
+      //         page,
+      //         !0,
+      //         time,
+      //         status,
+      //         xhr.responseText.substr(0, Config.maxLength) || '',
+      //         begin
+      //       );
+      //     } else {
+      //       var status = xhr.status || 'FAILED';
+
+      //       handleApi(
+      //         page,
+      //         !1,
+      //         time,
+      //         status,
+      //         xhr.responseText.substr(0, Config.maxLength) || '',
+      //         begin
+      //       );
+      //     }
+      //   }
+      // };
+      onFun(xhr, "readystatechange", function () {
         if (page && 4 === xhr.readyState) {
           var time = Date.now() - begin;
           if (xhr.status >= 200 && xhr.status <= 299) {
@@ -145,7 +176,7 @@ function hackAjax() {
             );
           } else {
             var status = xhr.status || 'FAILED';
-            
+
             handleApi(
               page,
               !1,
@@ -156,7 +187,8 @@ function hackAjax() {
             );
           }
         }
-      };
+      }, false)
+
       return xhr;
     };
   }
@@ -166,7 +198,7 @@ function hackAjax() {
 export function hackOnpopstate() {
   window['__bb_onpopstate_'] = window.onpopstate;
 
-  window.addEventListener('popstate', function() {
+  window.addEventListener('popstate', function () {
     // for (var r = arguments.length, a = new Array(r), o = 0; o < r; o++) a[o] = arguments[o];
     let page = Config.enableSPA
       ? parseHash(location.hash.toLowerCase())
